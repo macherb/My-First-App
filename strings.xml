@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">My First App</string>
+    <string name="action_settings">Settings</string>
+    <string name="light">LIGHT: 0</string>
+    <string name="add">Add to Back Stack</string>
+    <string name="pop">Pop Back Stack</string>
+    <string name="back_stack">Stack is +0</string>
+
+</resources>
