@@ -9,9 +9,35 @@
     tools:context=".MainActivity" >
 
     <TextView
-        android:id="@+id/helloworld"
+        android:id="@+id/light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="@string/light" />
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/light"
+        android:layout_below="@+id/light"
+        android:text="@string/add" />
+
+    <TextView
+        android:id="@+id/backStack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/add"
+        android:layout_below="@+id/add"
+        android:text="@string/back_stack" />
+
+    <Button
+        android:id="@+id/pop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/add"
+        android:layout_alignBottom="@+id/add"
+        android:layout_toRightOf="@+id/add"
+        android:enabled="false"
+        android:text="@string/pop" />
 
 </RelativeLayout>
