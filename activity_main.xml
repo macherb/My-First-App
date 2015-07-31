@@ -40,4 +40,49 @@
         android:enabled="false"
         android:text="@string/pop" />
 
+    <Button
+        android:id="@+id/newLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/backStack"
+        android:layout_below="@+id/backStack"
+        android:text="@string/newLocation" />
+
+    <TextView
+        android:id="@+id/locationHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newLocation"
+        android:layout_below="@+id/newLocation"
+        android:text="@string/locationHome" />
+
+    <TextView
+        android:id="@+id/locationNow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/locationHome"
+        android:layout_below="@+id/locationHome"
+        android:text="@string/locationNow" />
+
+    <EditText
+        android:id="@+id/Latitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/locationNow"
+        android:layout_below="@+id/locationNow"
+        android:ems="10"
+        android:inputType="numberSigned|numberDecimal" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/Longitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/Latitude"
+        android:layout_below="@+id/Latitude"
+        android:ems="10"
+        android:inputType="numberSigned|numberDecimal" />
+
 </RelativeLayout>
