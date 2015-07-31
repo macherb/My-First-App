@@ -7,5 +7,8 @@
     <string name="add">Add to Back Stack</string>
     <string name="pop">Pop Back Stack</string>
     <string name="back_stack">Stack is +0</string>
+    <string name="newLocation">Set new Home location</string>
+    <string name="locationHome">0, 0, 0</string>
+    <string name="locationNow">0, 0, 0</string>
 
 </resources>
