@@ -27,9 +27,13 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity implements FragmentManager.OnBackStackChangedListener {
 
-	private TextView		mHelloWorld,
+    static final double _eQuatorialEarthRadius = 6378.1370D;
+    static final double _d2r = (Math.PI / 180D);
+
+    private TextView		mHelloWorld,
 							mBackStack,
 							mHome,
+
 							mNow;
 	private SensorManager	mSensorManager;
 	private Sensor			mLight;
@@ -103,28 +107,185 @@ public class MainActivity extends Activity implements FragmentManager.OnBackStac
                     		(!mLongitude.	getText().toString().equals(""))
                     	   )
                 		{
-                			if		(Double.parseDouble(mLatitude.	getText().toString()) < HomeLatitude	)
+                			double dlong =	(HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * _d2r;
+
+                			double dlat =	(HomeLatitude - Double.parseDouble(mLatitude.getText().toString())) * _d2r;
+
+                			double a =		Math.pow(Math.sin(dlat / 2D), 2D) +
+                	        				Math.cos(Double.parseDouble(mLatitude.getText().toString()) * _d2r) * 
+                	        				Math.cos(HomeLatitude * _d2r) * 
+                	        				Math.pow(Math.sin(dlong / 2D), 2D);
+
+                	        double c = 2D * Math.atan2(Math.sqrt(a), Math.sqrt(1D - a));
+
+                	        String distance =	"You are " + _eQuatorialEarthRadius * c + " km ";
+
+                	        String direction = null;
+
+                			if		(Double.parseDouble(mLatitude.	getText().toString()) < HomeLatitude	)		//destination is south of location
                 			{
-                				if		(Double.parseDouble(mLongitude.	getText().toString()) < HomeLongitude	)
+                				if		(Double.parseDouble(mLongitude.	getText().toString()) < HomeLongitude	)	//destination is west  of location
                 				{
-                					mHome.setText("You are north east of the location");
+                					if      (
+                							 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
+                							 <
+                							 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 1D)
+                							)
+                					{
+                						direction = "east";
+                					}
+                					else if (
+                							 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
+                							  <
+                							 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 3D)
+                							)
+                					{
+                						direction = "east north east";
+                					}
+                					else if (
+                							 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 3D)
+                							  <
+                							 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
+                							)
+                					{
+                						direction = "north east";
+               						}
+                					else if (
+                							 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 1D)
+                							  <
+                							 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
+                							)
+                					{
+                						direction = "north north east";
+                					}
+                					else
+                					{
+                						direction = "north";
+                					}
                 				}
-                				else if (Double.parseDouble(mLongitude.	getText().toString()) > HomeLongitude	)
+                				else if (Double.parseDouble(mLongitude.	getText().toString()) > HomeLongitude	)	//destination is east  of location
                     			{
-                    				mHome.setText("You are north west of the location");
+                					if      (
+               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
+               							 	  <
+               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 1D)
+                							)
+                					{
+                						direction = "west";
+                					}
+                					else if (
+               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
+               							 	  <
+               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 3D)
+                							)
+                					{
+                						direction = "west north west";
+                					}
+                					else if (
+                							 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 3D)
+                							  <
+                							 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
+                							)
+                					{
+                						direction = "north west";
+              						}
+                					else if (
+               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 1D)
+               							 	 <
+               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
+                							)
+                					{
+                						direction = "north north west";
+                					}
+                					else
+                					{
+                						direction = "north";
+                					}
                     			}
                 			}
-                			else if (Double.parseDouble(mLatitude.	getText().toString()) > HomeLatitude	)
+                			else if (Double.parseDouble(mLatitude.	getText().toString()) > HomeLatitude	)		//destination is north of location
                 			{
-                				if		(Double.parseDouble(mLongitude.	getText().toString()) < HomeLongitude	)
+                				if		(Double.parseDouble(mLongitude.	getText().toString()) < HomeLongitude	)	//destination is west  of location
                 				{
-                					mHome.setText("You are south east of the location");
+                					if      (
+               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
+               							 	  <
+               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 1D)
+                							)
+                					{
+                						direction = "east";
+                					}
+                					else if (
+               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
+               							 	  <
+               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 3D)
+                							)
+                					{
+                						direction = "east south east";
+                					}
+                					else if (
+               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 3D)
+               							 	  <
+               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
+                							)
+                					{
+                						direction = "south east";
+              						}
+                					else if (
+               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 1D)
+               							 	  <
+               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
+                							)
+                					{
+                						direction = "south south east";
+                					}
+                					else
+                					{
+                						direction = "south";
+                					}
                 				}
-                				else if (Double.parseDouble(mLongitude.	getText().toString()) > HomeLongitude	)
+                				else if (Double.parseDouble(mLongitude.	getText().toString()) > HomeLongitude	)	//destination is east  of location
                 				{
-                					mHome.setText("You are south west of the location");
+                					if      (
+              							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
+              							 	  <
+              							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 1D)
+                							)
+                					{
+                						direction = "west";
+                					}
+                					else if (
+              							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
+              							 	  <
+              							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 3D)
+                							)
+                					{
+                						direction = "west south west";
+                					}
+                					else if (
+              							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 3D)
+              							 	  <
+              							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
+                							)
+                					{
+                						direction = "south west";
+             						}
+                					else if (
+              							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 1D)
+              							 	  <
+              							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
+                							)
+                					{
+                						direction = "south south west";
+                					}
+                					else
+                					{
+                						direction = "south";
+                					}
                 				}
                 			}
+
+                			mHome.setText("" + distance + direction + " of the location");
                 		}
             		} catch (Exception ex) {
                 		HomeLatitude = 0;
