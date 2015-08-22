@@ -85,4 +85,14 @@
         android:ems="10"
         android:inputType="numberSigned|numberDecimal" />
 
+    <ToggleButton
+        android:id="@+id/Merican"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/Longitude"
+        android:layout_below="@+id/Longitude"
+        android:layout_marginTop="14dp"
+        android:textOff="@string/NotMerican"
+        android:textOn="@string/NotMerican" />
+
 </RelativeLayout>
