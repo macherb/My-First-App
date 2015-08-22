@@ -10,5 +10,7 @@
     <string name="newLocation">Set new Home location</string>
     <string name="locationHome">0, 0, 0</string>
     <string name="locationNow">0, 0, 0</string>
+    <string name="NotMerican">Are you not American?</string>
+    <string name="Merican">Are you Merican?</string>
 
 </resources>
