@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.example.myfirstapp.R.string;
+
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class MainActivity extends Activity implements FragmentManager.OnBackStackChangedListener {
 
@@ -33,7 +36,6 @@ public class MainActivity extends Activity implements FragmentManager.OnBackStac
     private TextView		mHelloWorld,
 							mBackStack,
 							mHome,
-
 							mNow;
 	private SensorManager	mSensorManager;
 	private Sensor			mLight;
@@ -42,6 +44,7 @@ public class MainActivity extends Activity implements FragmentManager.OnBackStac
 							mNew;
 	private	EditText		mLatitude,
 							mLongitude;
+	private ToggleButton	mMerican;
 
 	LocationManager			locationManager;
 
@@ -51,7 +54,7 @@ public class MainActivity extends Activity implements FragmentManager.OnBackStac
 							HomeLongitude,
 							HomeAltitude;
 
-	ComponentName mMediaButtonReceiverComponent;
+	ComponentName			mMediaButtonReceiverComponent;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {//first, no onSaveInstanceState
@@ -70,6 +73,7 @@ public class MainActivity extends Activity implements FragmentManager.OnBackStac
         mNow =				(TextView		) findViewById		(R.id.locationNow	);
         mLatitude =			(EditText		) findViewById		(R.id.Latitude		);
 		mLongitude =		(EditText		) findViewById		(R.id.Longitude		);
+        mMerican =			(ToggleButton	) findViewById		(R.id.Merican		);
 
         mAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -90,16 +94,16 @@ public class MainActivity extends Activity implements FragmentManager.OnBackStac
             public void onClick(View v) {
             	if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
             	{
-            		HomeLatitude = 0;
-            		HomeLongitude = 0;
-            		HomeAltitude = 0;
+            		HomeLatitude =	0;
+            		HomeLongitude =	0;
+            		HomeAltitude =	0;
             		mHome.setText("no gps");
             	} else {
             		Location HomeLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             		try {
-                		HomeLatitude = HomeLocation.getLatitude();
-                		HomeLongitude = HomeLocation.getLongitude();
-                		HomeAltitude = HomeLocation.getAltitude();
+                		HomeLatitude =	HomeLocation.getLatitude	();
+                		HomeLongitude =	HomeLocation.getLongitude	();
+                		HomeAltitude =	HomeLocation.getAltitude	();
 //            			mHome.setText(HomeLatitude + " " + HomeLongitude + " " + HomeAltitude);
                 		if (
                 			(!mLatitude.	getText().toString().equals(""))
@@ -107,196 +111,69 @@ public class MainActivity extends Activity implements FragmentManager.OnBackStac
                     		(!mLongitude.	getText().toString().equals(""))
                     	   )
                 		{
-                			double dlong =	(HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * _d2r;
+                			double deltaLong =	HomeLongitude -	Double.parseDouble(mLongitude	.getText().toString());
+                			double dlong =		deltaLong * _d2r;
 
-                			double dlat =	(HomeLatitude - Double.parseDouble(mLatitude.getText().toString())) * _d2r;
+                			double deltaLat =	HomeLatitude -	Double.parseDouble(mLatitude	.getText().toString());
+                			double dlat =		deltaLat * _d2r;
 
-                			double a =		Math.pow(Math.sin(dlat / 2D), 2D) +
-                	        				Math.cos(Double.parseDouble(mLatitude.getText().toString()) * _d2r) * 
-                	        				Math.cos(HomeLatitude * _d2r) * 
-                	        				Math.pow(Math.sin(dlong / 2D), 2D);
+                			double a =			Math.pow(Math.sin(dlat / 2D), 2D) +
+                	        					Math.cos(Double.parseDouble(mLatitude.getText().toString()) * _d2r) * 
+                	        					Math.cos(HomeLatitude * _d2r) * 
+                	        					Math.pow(Math.sin(dlong / 2D), 2D);
 
-                	        double c = 2D * Math.atan2(Math.sqrt(a), Math.sqrt(1D - a));
+                	        double c =			2D * Math.atan2(Math.sqrt(a), Math.sqrt(1D - a));
 
-                	        String distance =	"You are " + _eQuatorialEarthRadius * c + " km ";
+                	        String distance;
 
-                	        String direction = null;
+                	        if (mMerican.isChecked())
+                	        	distance =	"You are " + _eQuatorialEarthRadius * c + " km ";
+                	        else
+                	        	distance =	"You are " + _eQuatorialEarthRadius * c * 0.621371192D + " miles ";
 
-                			if		(Double.parseDouble(mLatitude.	getText().toString()) < HomeLatitude	)		//destination is south of location
+                	        String direction =	null;
+
+                	        String first =		null,
+                	        		second =	null;
+
+            				if		(deltaLong	> 0)		//destination is west  of location
+            				{
+            					first =		"east";
+            				}
+            				else if (deltaLong	< 0)		//destination is east  of location
                 			{
-                				if		(Double.parseDouble(mLongitude.	getText().toString()) < HomeLongitude	)	//destination is west  of location
-                				{
-                					if      (
-                							 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
-                							 <
-                							 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 1D)
-                							)
-                					{
-                						direction = "east";
-                					}
-                					else if (
-                							 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
-                							  <
-                							 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 3D)
-                							)
-                					{
-                						direction = "east north east";
-                					}
-                					else if (
-                							 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 3D)
-                							  <
-                							 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
-                							)
-                					{
-                						direction = "north east";
-               						}
-                					else if (
-                							 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 1D)
-                							  <
-                							 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
-                							)
-                					{
-                						direction = "north north east";
-                					}
-                					else
-                					{
-                						direction = "north";
-                					}
-                				}
-                				else if (Double.parseDouble(mLongitude.	getText().toString()) > HomeLongitude	)	//destination is east  of location
-                    			{
-                					if      (
-               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
-               							 	  <
-               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 1D)
-                							)
-                					{
-                						direction = "west";
-                					}
-                					else if (
-               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
-               							 	  <
-               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 3D)
-                							)
-                					{
-                						direction = "west north west";
-                					}
-                					else if (
-                							 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 3D)
-                							  <
-                							 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
-                							)
-                					{
-                						direction = "north west";
-              						}
-                					else if (
-               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 1D)
-               							 	 <
-               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
-                							)
-                					{
-                						direction = "north north west";
-                					}
-                					else
-                					{
-                						direction = "north";
-                					}
-                    			}
-                			}
-                			else if (Double.parseDouble(mLatitude.	getText().toString()) > HomeLatitude	)		//destination is north of location
+            					first =		"west";
+            				}
+                			if		(deltaLat	> 0)		//destination is south of location
                 			{
-                				if		(Double.parseDouble(mLongitude.	getText().toString()) < HomeLongitude	)	//destination is west  of location
-                				{
-                					if      (
-               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
-               							 	  <
-               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 1D)
-                							)
-                					{
-                						direction = "east";
-                					}
-                					else if (
-               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
-               							 	  <
-               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 3D)
-                							)
-                					{
-                						direction = "east south east";
-                					}
-                					else if (
-               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 3D)
-               							 	  <
-               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
-                							)
-                					{
-                						direction = "south east";
-              						}
-                					else if (
-               							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 1D)
-               							 	  <
-               							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
-                							)
-                					{
-                						direction = "south south east";
-                					}
-                					else
-                					{
-                						direction = "south";
-                					}
-                				}
-                				else if (Double.parseDouble(mLongitude.	getText().toString()) > HomeLongitude	)	//destination is east  of location
-                				{
-                					if      (
-              							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
-              							 	  <
-              							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 1D)
-                							)
-                					{
-                						direction = "west";
-                					}
-                					else if (
-              							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 4D)
-              							 	  <
-              							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 3D)
-                							)
-                					{
-                						direction = "west south west";
-                					}
-                					else if (
-              							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 3D)
-              							 	  <
-              							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
-                							)
-                					{
-                						direction = "south west";
-             						}
-                					else if (
-              							 	 Math.abs((HomeLatitude -  Double.parseDouble(mLatitude. getText().toString())) * 1D)
-              							 	  <
-              							 	 Math.abs((HomeLongitude - Double.parseDouble(mLongitude.getText().toString())) * 4D)
-                							)
-                					{
-                						direction = "south south west";
-                					}
-                					else
-                					{
-                						direction = "south";
-                					}
-                				}
+                				second =	"north";
                 			}
-
-                			mHome.setText("" + distance + direction + " of the location");
+                			else if (deltaLat	< 0)		//destination is north of location
+                			{
+                				second =	"south";
+                			}
+							direction = GetDirection(Math.abs(deltaLat), Math.abs(deltaLong), first, second);
+                			mHome.setText(distance + direction + " of the location");
                 		}
             		} catch (Exception ex) {
-                		HomeLatitude = 0;
-                		HomeLongitude = 0;
-                		HomeAltitude = 0;
+                		HomeLatitude =	0;
+                		HomeLongitude =	0;
+                		HomeAltitude =	0;
             			mHome.setText("" + ex.toString());
             		}
             	}
             	Log.d("", "New button");
             }
         });
+        mMerican.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (mMerican.isChecked())
+					mMerican.setText(string.Merican);
+				else
+					mMerican.setText(string.NotMerican);
+			}
+		});
         getFragmentManager().addOnBackStackChangedListener(this);
 
         if (mLight == null)
@@ -471,4 +348,47 @@ public class MainActivity extends Activity implements FragmentManager.OnBackStac
     	public void onAccuracyChanged(Sensor sensor, int accuracy) {
     	}
 	};
+
+	private String GetDirection(double deltaLat, double deltaLong, String first, String second) {
+		String	result;
+
+		if      (
+				 (deltaLat *	4D)
+				 <
+				 (deltaLong *	1D)
+				)
+		{
+			result = first;
+		}
+		else if (
+				 (deltaLat *	4D)
+				  <
+				 (deltaLong *	3D)
+				)
+		{
+			result = first + " " + second + " " + first;
+		}
+		else if (
+				 (deltaLat *	3D)
+				  <
+				 (deltaLong *	4D)
+				)
+		{
+			result = second + " " + first;
+		}
+		else if (
+				 (deltaLat *	1D)
+				  <
+				 (deltaLong *	4D)
+				)
+		{
+			result = second + " " + second + " " + first;
+		}
+		else
+		{
+			result = second;
+		}
+
+		return	result;
+	}
 }
